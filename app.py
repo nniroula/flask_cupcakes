@@ -27,17 +27,19 @@ def home_page():
 def list_all_cupcakes():
     cc = Cupcake.query.all()  # this gives query object
     # cupcakes = [item.Cupcake.to_dict() for item in cc ]
-   
     cupcakes = [item.to_dict() for item in cc]
-
-    # for item in cc:
-    #     cupcakes.append(item.size)
-
-    # return render_template("list_cupcakes.html", cupcakes = cupcakes)
-    # return jsonify(cupcakes: cupcakes)  
     return jsonify(cupcakes = cupcakes)  
 
-# Cupcake.to_dict
+
+# GET /api/cupcakes/[cupcake-id]
+# Get data about a single cupcake.
+# Respond with JSON like: {cupcake: {id, flavor, size, rating, image}}.
+# This should raise a 404 if the cupcake cannot be found.
+@app.route('/api/cupcakes/<int:cupcake_id>')
+def get_data_about_single_cupcake(cupcake_id):
+    singleCupCake = Cupcake.query.get_or_404(cupcake_id)
+    return jsonify(singleCupCake.to_dict()) 
+
 
 """
 
@@ -45,12 +47,7 @@ Part Two: Listing, Getting & Creating Cupcakes
 Make routes for the following:
 
 
-GET /api/cupcakes/[cupcake-id]
-Get data about a single cupcake.
 
-Respond with JSON like: {cupcake: {id, flavor, size, rating, image}}.
-
-This should raise a 404 if the cupcake cannot be found.
 
 POST /api/cupcakes
 Create a cupcake with flavor, size, rating and image data from the body of the request.
