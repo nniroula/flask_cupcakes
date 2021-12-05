@@ -16,10 +16,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///Flask_Cupcake_db'    # po
 app.config['SQLALCHEMY_ECHO'] = True    # prints sql statements to terminal
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False      # suppress sqlalchemy yelling at you
 
-@app.route('/')
-def home_page():
-    return "<small> Fun Project </small>"
-
 # GET /api/cupcakes
 # Get data about all cupcakes.
 # Respond with JSON like: {cupcakes: [{id, flavor, size, rating, image}, ...]}.
@@ -82,13 +78,37 @@ def update_cupcake(cupcake_id):
 # DELETE /api/cupcakes/[cupcake-id]
 # This should raise a 404 if the cupcake cannot be found.
 # Delete cupcake with the id passed in the URL. Respond with JSON like {message: "Deleted"}.
-@app.route('api/cupcakes/<int:cupcake_id>', methods = ['DELETE'])
+@app.route('/api/cupcakes/<int:cupcake_id>', methods = ['DELETE'])
 def delete_cupcake(cupcake_id):
     cupcake = Cupcake.query.get_or_404(cupcake_id)
     db.session.delete(cupcake)
     db.session.commit()
     return jsonify(message = 'deleted')
 
+
+
+# Part Five: frontend aspect
+
+
+"""
+Make this route:
+
+GET /
+This should return an HTML page (via render_template). This page should be entirely static (the route should just 
+render the template, without providing any information on cupcakes in the database). It should show simply have an 
+empty list where cupcakes should appear and a form where new cupcakes can be added.
+
+Write Javascript (using axios and jQuery) that:
+
+queries the API to get the cupcakes and adds to the page
+handles form submission to both let the API know about the new cupcake and updates the list on the page to show it
+(You do not need to use WTForms to make this form; this is a possibility in the further study.)
+
+"""
+
+@app.route('/')
+def show_empty_list_and_form_to_add_cupcake():
+    return render_template("cupcake_frontend_form.html")
 
 
 
